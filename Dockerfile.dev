@@ -1,0 +1,24 @@
+# ---------- Base ----------
+FROM node:18-alpine AS base
+
+# Create app directory
+WORKDIR /app
+
+# ---------- Builder ----------
+# Creates:
+# - node_modules: production dependencies (no dev dependencies)
+# - dist: A production build compiled with Babel
+FROM base AS builder
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json tsconfig.json ./
+
+# Bundle app source
+COPY ./src ./src
+
+RUN npm install
+
+# Command
+CMD ["npm", "run", "dev"]
