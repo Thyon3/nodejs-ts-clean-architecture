@@ -12,3 +12,8 @@ export class AddTableMessage1714686029732 implements MigrationInterface {
     );
   }
 
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query('DROP INDEX "public"."idx_message_room"');
+    await queryRunner.query('DROP TABLE "message_entity"');
+  }
+}
