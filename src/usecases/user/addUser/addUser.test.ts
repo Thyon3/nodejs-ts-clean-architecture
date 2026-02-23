@@ -51,3 +51,34 @@ describe('#AddUser()', () => {
     testContainer.unbindAll();
   });
 
+  // Each test is executed with a snapshot of the container
+  it('It should pass and return that the user was created successfully CREATED', async () => {
+    // Mock create user response
+    const userCreated = {
+      id: 1,
+      email: 'test@test.com',
+    } as CreateUserDto;
+
+    // Mock repository used methods
+    userRepositoryMock.createUser.mockResolvedValue(userCreated);
+    userRepositoryMock.findUser.mockResolvedValue(null);
+
+    // Execute use case
+    const result = await addUser.execute(user);
+
+    // Assert model methods were called with correct arguments
+    expect(userRepositoryMock.findUser).toHaveBeenCalledWith(user.email);
+    expect(userRepositoryMock.createUser).toHaveBeenCalledWith(user);
+
+    // Assert expectations
+    expect(result).toEqual({
+      error: CREATED.error,
+      code: CREATED.code,
+      message: CREATED.message,
+      data: {
+        id: userCreated.id,
+        email: userCreated.email,
+      },
+    });
+  });
+});
