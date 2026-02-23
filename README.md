@@ -1,32 +1,374 @@
-## Authors
-
-- Sebastián Ituarte [@sebajax](https://github.com/sebajax)
-
-<br />
-
-## This structure will help in the project building using nodejs and typescript
+# Node.js TypeScript Clean Architecture
 
 [![Code Style: Google](https://img.shields.io/badge/code%20style-google-blueviolet.svg)](https://github.com/google/gts)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
 [![npm version](https://badge.fury.io/js/express.svg)](https://badge.fury.io/js/express)
+[![CI/CD Pipeline](https://github.com/your-org/nodejs-ts-clean/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/nodejs-ts-clean/actions/workflows/ci.yml)
 
-![alt text](./nodejs_logo.png)
+A robust Node.js application following Clean Architecture principles with TypeScript, featuring authentication, rate limiting, comprehensive logging, and modern development practices.
 
-## This app uses conventional commits
+## 🏗️ Architecture
 
-[Conventional commits url](https://www.conventionalcommits.org/en/v1.0.0/)
+This project implements **3-layer hexagonal architecture** (route - controller - service) following Clean Architecture principles:
 
-<br />
+```
+src/
+├── adapters/           # Interface adapters (controllers, repositories, providers)
+├── domains/           # Business entities and rules
+├── infrastructure/    # External concerns (database, logging, middleware)
+└── usecases/         # Application business logic
+```
 
-## This api uses 3-layer hexagonal architecture (route - controller - service)
+![Clean Architecture](./nodejs-ts-clean-architecture.png)
 
-![alt text](./nodejs-ts-clean-architecture.png)
+## ✨ Features
 
-<br />
+### 🔐 Authentication & Security
+- JWT-based authentication with access and refresh tokens
+- Password hashing with bcrypt
+- Role-based access control (RBAC)
+- Rate limiting with configurable windows
+- Security event logging
 
-## Example showed below in each step
+### 🏥 Health Monitoring
+- Comprehensive health check endpoints
+- Database connection monitoring
+- Memory usage tracking
+- Kubernetes-ready readiness/liveness probes
 
-![alt text](./example.png)
+### 📝 Logging & Monitoring
+- Structured logging with Winston
+- Request/response logging
+- Authentication event tracking
+- Security event monitoring
+- Environment-aware log formatting
+
+### 🚀 Development Tools
+- ESLint with Prettier integration
+- Pre-commit hooks with Husky
+- Environment variable validation
+- Docker containerization with health checks
+- Comprehensive CI/CD pipeline
+
+### 🧪 Testing
+- Unit testing with Jest
+- Code coverage reporting
+- Integration test support
+- Security vulnerability scanning
+
+## 📋 Prerequisites
+
+- Node.js 18.x or 20.x
+- npm 9.x or higher
+- PostgreSQL (for database functionality)
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/nodejs-ts-clean.git
+cd nodejs-ts-clean
+
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env
+
+# Start development server
+npm run dev
+```
+
+### Environment Variables
+
+Create a `.env` file with the following variables:
+
+```env
+NODE_ENV=development
+PORT=3000
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-min-32-chars
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-min-32-chars
+
+# Database Configuration
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_NAME=nodejs_clean
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=password
+
+# Logging
+LOG_LEVEL=info
+
+# CORS
+CORS_ORIGIN=*
+
+# Rate Limiting
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+```
+
+## 📚 API Documentation
+
+### Authentication Endpoints
+
+#### Login
+```http
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+#### Refresh Token
+```http
+POST /auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+#### Logout
+```http
+POST /auth/logout
+Authorization: Bearer <access_token>
+```
+
+#### Get Profile
+```http
+POST /auth/profile
+Authorization: Bearer <access_token>
+```
+
+### User Management
+
+#### Create User
+```http
+POST /api/v1/user
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+### Health Check Endpoints
+
+#### Basic Health Check
+```http
+GET /health
+```
+
+#### Detailed Health Check
+```http
+GET /health/detailed
+```
+
+#### Readiness Probe
+```http
+GET /health/ready
+```
+
+#### Liveness Probe
+```http
+GET /health/live
+```
+
+## 🛠️ Development
+
+### Available Scripts
+
+```bash
+# Development
+npm run dev              # Start development server with nodemon
+npm run compile          # Compile TypeScript to JavaScript
+npm run test             # Run unit tests
+npm run test:watch       # Run tests in watch mode
+npm run coverage         # Generate coverage report
+
+# Code Quality
+npm run lint             # Run ESLint
+npm run fix              # Auto-fix linting issues
+npm run prettier:check   # Check code formatting
+npm run prettier:write   # Format code with Prettier
+
+# Database
+npm run typeorm          # Run TypeORM CLI commands
+
+# Production
+npm run build            # Build for production
+npm start                # Start production server
+```
+
+### Code Style
+
+This project follows:
+- **Google TypeScript Style** with `gts`
+- **Prettier** for code formatting
+- **Conventional Commits** for commit messages
+- **Pre-commit hooks** for code quality
+
+### Docker
+
+```bash
+# Build image
+docker build -t nodejs-ts-clean .
+
+# Run container
+docker run -p 3000:3000 --env-file .env nodejs-ts-clean
+
+# With docker-compose
+docker-compose up -d
+```
+
+## 🧪 Testing
+
+### Running Tests
+
+```bash
+# Run all tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run specific test file
+npm test -- authenticateUser.test.ts
+```
+
+### Test Structure
+
+```
+src/
+├── usecases/
+│   └── user/
+│       ├── addUser/
+│       │   ├── addUser.test.ts
+│       │   └── ...
+│       └── authenticateUser/
+│           ├── authenticateUser.test.ts
+│           └── ...
+```
+
+## 🔄 CI/CD Pipeline
+
+This project includes a comprehensive CI/CD pipeline:
+
+### Pipeline Stages
+
+1. **Test Matrix**: Node.js 18.x and 20.x
+2. **Code Quality**: Linting, formatting, type checking
+3. **Security**: Vulnerability audit, CodeQL analysis
+4. **Build**: Application compilation
+5. **Docker**: Image build and security scanning
+6. **Deploy**: Staging and production deployment
+
+### GitHub Actions
+
+The pipeline is triggered on:
+- Push to `main` and `develop` branches
+- Pull requests to `main` branch
+
+## 📊 Monitoring
+
+### Health Checks
+
+The application provides multiple health check endpoints:
+
+- **Basic Health**: Service status and uptime
+- **Detailed Health**: System information and resource usage
+- **Readiness**: Database connectivity check
+- **Liveness**: Basic service availability
+
+### Logging
+
+Structured logging includes:
+- Request/response details
+- Authentication events
+- Security incidents
+- Database operations
+- Error tracking
+
+## 🔧 Configuration
+
+### Environment Validation
+
+The application validates all required environment variables on startup:
+
+```typescript
+import { EnvValidation } from './infrastructure/config/env.validation';
+
+// Get validated configuration
+const config = EnvValidation.validate();
+
+// Type-safe access
+const jwtSecret = EnvValidation.get('JWT_SECRET');
+const dbConfig = EnvValidation.getDatabaseConfig();
+```
+
+### Rate Limiting
+
+Configure rate limiting per endpoint:
+
+```typescript
+// API rate limiter (100 requests per 15 minutes)
+RateLimitMiddleware.createApiLimiter(100, 15 * 60 * 1000)
+
+// Auth rate limiter (5 requests per 15 minutes)
+RateLimitMiddleware.createAuthLimiter(5, 15 * 60 * 1000)
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (following [Conventional Commits](https://www.conventionalcommits.org/))
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Commit Convention
+
+```
+feat: Add new feature
+fix: Fix bug
+docs: Update documentation
+style: Code style changes
+refactor: Code refactoring
+test: Add tests
+chore: Maintenance tasks
+```
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- **Sebastián Ituarte** - [@sebajax](https://github.com/sebajax)
+
+## 🙏 Acknowledgments
+
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) by Robert C. Martin
+- [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/) by Alistair Cockburn
+- [Google TypeScript Style](https://github.com/google/gts)
+- [Inversify](https://github.com/inversify/InversifyJS) for dependency injection
+
+---
+
+**Built with ❤️ using TypeScript and Clean Architecture principles**
 
 #### Insert a new user
 
