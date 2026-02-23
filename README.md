@@ -583,3 +583,149 @@ Observations
 <br />
 
 ---
+
+## Schema explained
+
+Schema is the layer that has all the request validations it will be used by the controller and only the controller. In this layer we use joi that is a validation library from javascript. In the schema folder we will need to add a single for each main controller. For this example in all the user controller we will have a single user.schema.ts that will hold all the user validations.
+
+### In this example we will create a new schema in schema/ folder
+
+```json
+user.schema.ts
+```
+
+```typescript
+// module import
+import Joi from 'joi';
+
+const addUserSchema = Joi.object({
+  name: Joi.string().min(1).required(),
+  email: Joi.string().email({minDomainSegments: 2}).max(100).required(),
+}).required();
+
+export {addUserSchema};
+```
+
+<br />
+
+---
+
+## Util explained
+
+Util is the layer that will have logic that will be re use in multiple services in the application, it will also hold the providers if we need to call a external source.
+
+<br />
+
+---
+
+## Infraestructure explained
+
+Infraestructure is the layer that will handle the connections to the infraestructure layer for example a database. This is the most outter layer of the application and is needed to be only injected between layers, so we don't add a infraestructure dependecy to inner layers.
+
+### In this example we will create a database connection
+
+```typescript
+// module import
+import {Sequelize} from 'sequelize-typescript';
+// logger import
+import {logger} from '../log/logger';
+
+/**
+ * create a connection to the database
+ */
+const db = new Sequelize(
+  `${process.env.DB_NAME}`,
+  `${process.env.DB_USER}`,
+  `${process.env.DB_PASSWORD}`,
+  {
+    logging: msg => logger.debug(msg),
+    host: `${process.env.DB_HOST}`,
+    dialect: 'postgres',
+    dialectOptions: {
+      socketPath: process.env.DB_SOCKET || null,
+    },
+    pool: {
+      max: parseInt(`${process.env.DB_POOL_MAX}`, 10) || 5,
+      min: parseInt(`${process.env.DB_POOL_MIN}`, 10) || 0,
+      acquire: parseInt(`${process.env.DB_POOL_ACQUIRE}`, 10) || 30000,
+      idle: parseInt(`${process.env.DB_POOL_IDLE}`, 10) || 10000,
+    },
+  }
+);
+
+(async () => {
+  try {
+    await db.authenticate();
+    logger.info('connection to database has been established successfully.');
+  } catch (error) {
+    logger.error(`unable to connect to the database: ${error}`);
+  }
+})();
+
+export default db;
+```
+
+<br />
+
+---
+
+## Docker usage
+
+    Build server
+        docker-compose -p nodejs-ts-clean-architecture build
+
+    Start server
+        docker-compose up -d
+
+    Stop server
+        docker-compose down
+
+<br />
+
+---
+
+## Standalone usage
+
+    npm run dev
+
+<br />
+
+---
+
+## Testing
+
+    To run unit testing
+        npm run test
+
+    To run unit testing coverage
+        npm run test_cov
+
+<br />
+
+---
+
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`NODE_ENV`
+
+`PORT`
+
+`API_NAME`
+
+`API_VERSION`
+
+`LOG_LEVEL`
+
+`DB_NAME`
+
+`DB_USER`
+
+`DB_PASSWORD`
+
+`DB_PORT`
+
+`DB_HOST`
+
+`MIGRATION_DIR`
