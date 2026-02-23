@@ -301,3 +301,75 @@ Observations
 <br />
 
 ---
+
+## Model explained
+
+Model is the layer that defines the interactaion with a datasource from the infraestructure layer, this layer colud be a relational database or a no relational database like mongodb. For this layer the structure needs a folder for the model and 2 files:
+user.model.interface.ts (This holds the model factory for dependency injection and all it's definitions)
+user.model.ts (This holds the model definition depending on the datasource)
+
+![alt text](./model.png)
+
+### In this example we will create a new model in model/user folder
+
+<br />
+
+1. Create the needed structure in model folder create a new folder user.
+2. Create a file named user.model.interface.ts to user folder
+3. Create a file named user.model.ts to user folder
+
+#### 2. Create a file named user.model.interface.ts to user folder
+
+```json
+user.model.interface.ts
+```
+
+```typescript
+// module import
+import {Optional} from 'sequelize';
+// model import
+import {UserModel} from '../index';
+
+interface IUserModel {
+  userId: number;
+  name: string;
+  email: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createUser(data: object): Promise<object>;
+}
+
+type UserCreationAttributes = Optional<IUserModel, 'userId'>;
+
+/*
+ * model factory init
+ */
+const userModel: IUserModel = new UserModel();
+
+export {IUserModel, UserCreationAttributes, userModel};
+```
+
+Observations
+<br />
+
+- We will need a basic user.model file all the models file will be called from model/index.ts and not directly because it will add the models to the database session.
+
+```json
+model/index.ts
+```
+
+```typescript
+// interface import
+import db from '../infraestructure/database/db';
+// model import
+import MessageModel from './message/message.model';
+import UserModel from './user/user.model';
+
+// map models to db session
+db.addModels([UserModel, MessageModel]);
+
+export {UserModel, MessageModel};
+```
+
+#### 3. Create a file named user.model.ts to user folder
+
