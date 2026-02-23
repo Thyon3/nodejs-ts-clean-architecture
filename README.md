@@ -23,3 +23,42 @@
 ![alt text](./nodejs-ts-clean-architecture.png)
 
 <br />
+
+## Example showed below in each step
+
+![alt text](./example.png)
+
+#### Insert a new user
+
+```http
+  POST /api/v1/user
+```
+
+| Parameter | Type     | Description                           |
+| :-------- | :------- | :------------------------------------ |
+| `name`    | `string` | **Required**. User name to be created |
+| `email`   | `string` | **Required**. Email to be created     |
+
+```json
+Request
+{
+  "name": "Jonh Doo",
+  "email": "jonh.doo@example.com"
+}
+
+Response
+{
+    "error": false,
+    "message": "USER_CREATED",
+    "data": {
+        "userId": 1,
+        "name": "John Doo",
+        "email": "example@example.com",
+        "updatedAt": "2023-05-25T22:13:07.013Z",
+        "createdAt": "2023-05-25T22:13:07.013Z"
+    }
+}
+```
+
+<br />
+
