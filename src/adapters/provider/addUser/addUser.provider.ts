@@ -8,3 +8,6 @@ import type { IAddUserProvider } from './addUser.interface';
 // provider import
 import { Provider } from '../provider';
 
+export class AddUserProvider extends Provider implements IAddUserProvider {
+  // method to create a new user
+  public async create(user: UserDomain): Promise<ResponseDomain> {
