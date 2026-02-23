@@ -14,6 +14,8 @@ const USER_REPOSITORY_TYPE = {
 interface IUserRepository {
   createUser(user: UserDomain): Promise<CreateUserDto>;
   findUser(email: string): Promise<QueryUserDto | null>;
+  findByEmail(email: string): Promise<QueryUserDto | null>;
+  findById(id: string): Promise<QueryUserDto | null>;
 }
 
 export { IUserRepository, USER_REPOSITORY_TYPE };

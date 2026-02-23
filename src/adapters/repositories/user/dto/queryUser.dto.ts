@@ -10,6 +10,10 @@ class QueryUserDto {
   @Expose()
   email: string;
   @Expose()
+  password: string;
+  @Expose()
+  role: string;
+  @Expose()
   createdAt: Date;
   @Expose()
   updatedAt: Date;
