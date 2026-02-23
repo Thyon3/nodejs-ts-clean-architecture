@@ -15,4 +15,23 @@ export default class CryptoUtil {
         }
         return hashEquals;
     }
+
+    public static createHmac(token: string, body: string): string {
+        return crypto
+            .createHmac('sha256', token)
+            .update(body)
+            .digest('base64')
+            .trim();
+    }
+
+    public static genarateChecksum(
+        str: string,
+        algorithm: string | null,
+        encoding: crypto.BinaryToTextEncoding | null
+    ): string {
+        return crypto
+            .createHash(algorithm || 'md5')
+            .update(str, 'utf8')
+            .digest(encoding || 'hex');
+    }
 }
