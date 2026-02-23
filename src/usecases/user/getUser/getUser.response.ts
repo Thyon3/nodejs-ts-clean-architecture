@@ -12,33 +12,32 @@ import { IGetUserResponse, ResponseGetUser } from './getUser.interface';
 
 // BAD_REQUEST
 const USER_NOT_FOUND: IResponseErrorDomain = {
-    error: true,
-    message: 'USER_NOT_FOUND',
-    code: StatusCodes.NOT_FOUND,
+  error: true,
+  message: 'USER_NOT_FOUND',
+  code: StatusCodes.NOT_FOUND,
 };
 
 // INTERNAL_SERVER_ERROR
 const GET_USER_ERROR: IResponseErrorDomain = {
-    error: true,
-    message: 'GET_USER_ERROR',
-    code: StatusCodes.INTERNAL_SERVER_ERROR,
+  error: true,
+  message: 'GET_USER_ERROR',
+  code: StatusCodes.INTERNAL_SERVER_ERROR,
 };
 
 /*
  * RETURN RESPONSE DOMAIN
  */
 const OK: IResponseDomain<ResponseGetUser> = {
-    error: false,
-    message: 'OK',
-    code: StatusCodes.OK,
-    data: undefined, // TypeORM might return undefined if not found, though interface says null
+  error: false,
+  message: 'OK',
+  code: StatusCodes.OK,
 };
 
 // response to export with definition
 const getUserResponse: IGetUserResponse = {
-    USER_NOT_FOUND,
-    GET_USER_ERROR,
-    OK,
+  USER_NOT_FOUND,
+  GET_USER_ERROR,
+  OK,
 };
 
 export { GET_USER_ERROR, getUserResponse, OK, USER_NOT_FOUND };

@@ -7,7 +7,6 @@ export default class PaginationUtil {
     }
     return 0;
   }
-}
 
   static getPaginationData(
     count: number,

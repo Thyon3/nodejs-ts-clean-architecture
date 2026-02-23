@@ -2,10 +2,10 @@
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
 import {
-    controller,
-    httpPost,
-    request,
-    response,
+  controller,
+  httpPost,
+  request,
+  response,
 } from 'inversify-express-utils';
 // Domain import
 import { IResponseDomain } from '../../../domains/response.domain';
@@ -13,9 +13,9 @@ import { IResponseDomain } from '../../../domains/response.domain';
 import { validate } from '../../../infrastructure/middleware/validate.middleware';
 // Use case import
 import {
-    ADD_USER_TYPE,
-    IAddUser,
-    ResponseAddUser,
+  ADD_USER_TYPE,
+  IAddUser,
+  ResponseAddUser,
 } from '../../../usecases/user/addUser/addUser.interface';
 // Interface import
 import { IAddUserRequest } from './user.interface';
@@ -24,24 +24,24 @@ import { addUserSchema } from './user.schema';
 
 @controller('/user')
 class UserController {
-    public constructor(
-        @inject(ADD_USER_TYPE.AddUser) private readonly _addUser: IAddUser
-    ) { }
+  public constructor(
+    @inject(ADD_USER_TYPE.AddUser) private readonly _addUser: IAddUser
+  ) {}
 
-    @httpPost('/', validate(addUserSchema))
-    async addUser(
-        @request() req: Request,
-        @response() res: Response
-    ): Promise<void> {
-        // Cast validated body into a user Domain instance
-        const user = req.body as unknown as IAddUserRequest; // Type assertion
+  @httpPost('/', validate(addUserSchema))
+  async addUser(
+    @request() req: Request,
+    @response() res: Response
+  ): Promise<void> {
+    // Cast validated body into a user Domain instance
+    const user = req.body as unknown as IAddUserRequest; // Type assertion
 
-        // Call the use case
-        const { error, message, code, data }: IResponseDomain<ResponseAddUser> =
-            await this._addUser.execute(user);
+    // Call the use case
+    const { error, message, code, data }: IResponseDomain<ResponseAddUser> =
+      await this._addUser.execute(user);
 
-        res.status(code).json({ error, message, data });
-    }
+    res.status(code).json({ error, message, data });
+  }
 }
 
 export { UserController };

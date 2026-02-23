@@ -6,14 +6,14 @@ import { QueryUserDto } from './dto/queryUser.dto';
 
 // User Repository DI identifiers
 const USER_REPOSITORY_TYPE = {
-    UserRepository: Symbol.for('UserRepository'),
-    UserRepositoryEntity: Symbol.for('Repository<UserEntity>'),
+  UserRepository: Symbol.for('UserRepository'),
+  UserRepositoryEntity: Symbol.for('Repository<UserEntity>'),
 };
 
 // User Repository interface
 interface IUserRepository {
-    createUser(user: UserDomain): Promise<CreateUserDto>;
-    findUser(email: string): Promise<QueryUserDto | null>;
+  createUser(user: UserDomain): Promise<CreateUserDto>;
+  findUser(email: string): Promise<QueryUserDto | null>;
 }
 
 export { IUserRepository, USER_REPOSITORY_TYPE };
