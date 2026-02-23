@@ -16,3 +16,18 @@ start:
 stop:
 	docker-compose down
 
+# Standalone usage for live reloading
+live-reload:
+	npm run dev
+
+# Testing
+test:
+	npm run test
+
+coverage:
+	npm run coverage
+
+# Cleaning, Formatting, Linting, and Vetting
+lint:
+	npm run lint
+
