@@ -198,3 +198,106 @@ interface IAddUserResponse {
 
 ```json
 addUser.service.interface.ts
+```
+
+```typescript
+// domain import
+import {IUserData} from '../../../controller/user/addUser/addUser.controller.interface';
+import IResponseDomain from '../../../domain/response.domain';
+// model import
+import {userModel} from '../../../model/user/user.model.interface';
+// service import
+import AddUserService from './addUser.service';
+
+// for addMessageService response domain
+interface IAddUserResponse {
+  USER_EXISTS: IResponseDomain;
+  INSERT_USER_ERROR: IResponseDomain;
+  CREATED: IResponseDomain;
+}
+
+// interface to implement the service
+interface IAddUserService {
+  addUser(userData: IUserData): Promise<IResponseDomain>;
+}
+
+/*
+ * service factory init
+ */
+const addUserService: IAddUserService = new AddUserService(userModel);
+
+export {IAddUserResponse, IAddUserService, addUserService};
+```
+
+Observations
+<br />
+
+- We use IResponseDomain this interface comes with the structure to define how the controller receives the response from the service.
+- We also include userModel to inject the dependency in the addUserService factory and not a direct injection so we can add a unit test mocking this model later.
+- We will need a basic service implementation file with the class and that implements this interface.
+
+<br />
+
+#### 4. Create a file named addUser.service.ts to addUser folder
+
+```json
+addUser.service.ts
+```
+
+```typescript
+// domain import
+import IResponseDomain from '../../../domain/response.domain';
+// interface import
+import {IUserModel} from '../../../model/user/user.model.interface';
+import {IUserData} from '../../../controller/user/addUser/addUser.controller.interface';
+import {IAddUserResponse, IAddUserService} from './addUser.service.interface';
+// service main class import
+import Service from '../../service';
+// response import
+import addUserResponse from './addUser.response';
+
+class AddUserService extends Service implements IAddUserService {
+  private response: IAddUserResponse;
+  private userModel: IUserModel;
+
+  public constructor(userModel: IUserModel) {
+    super();
+    this.response = addUserResponse;
+    this.userModel = userModel;
+  }
+
+  public async addUser(userData: IUserData): Promise<IResponseDomain> {
+    try {
+      // map user data to user model data
+      const user = {
+        name: userData.name,
+        email: userData.email,
+      };
+
+      const createdUser = await this.userModel.createUser(user);
+
+      // if all the process was succuessfully we return an OK status
+      return {
+        ...this.response.CREATED,
+        data: createdUser,
+      };
+    } catch (error) {
+      this.logger.error(`${AddUserService.name} error ${error}`);
+      return this.response.INSERT_USER_ERROR;
+    }
+  }
+}
+
+export default AddUserService;
+```
+
+Observations
+<br />
+
+- We use IResponseDomain this interface comes with the structure to define how the controller receives the response from the service.
+- This class needs to extend Service class that is part of the archetype.
+- It has to implement IAddUserService because it has all the interface contract of this class.
+
+<br />
+
+---
