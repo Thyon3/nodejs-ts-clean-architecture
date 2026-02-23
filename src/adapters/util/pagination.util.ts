@@ -8,3 +8,14 @@ export default class PaginationUtil {
     return 0;
   }
 }
+
+  static getPaginationData(
+    count: number,
+    page: number
+  ): { total: number; current: number } {
+    return {
+      total: Math.ceil(count / this.limit),
+      current: page <= 0 ? 1 : page,
+    };
+  }
+}
