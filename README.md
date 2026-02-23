@@ -444,3 +444,72 @@ Observations
 <br />
 
 ---
+
+## Controller explained
+
+Contoller is the layer that will be in between the route and the service it will serve has a validation layer previously to calling the service, and will have all the response definition needed fot the api. In controller main folder we add a folder with this specific controller name in this example we use user so the structure will be /controller/user. In this folder we have 2 files that are needed:
+user.controller.interface.ts (This holds the controller factory for dependency injection and all it's definitions)
+user.controller.ts (This holds the controller coding for resolution)
+
+![alt text](./controller.png)
+
+### In this example we will create a new controller in contoller/user folder to add new users
+
+<br />
+
+1. Create the needed structure in controller folder create a new folder user if needed, then create a folder [addUser]
+2. Create a file named addUser.controller.interface.ts to addUser folder
+3. Create a file named addUser.controller.ts to addUser folder
+
+### 2. Create a file named addUser.controller.interface.ts to addUser folder
+
+```json
+addUser.controller.interface.ts
+```
+
+```typescript
+// controller import
+import AddUserController from '../addUser/addUser.controller';
+// schema import
+import {addUserSchema} from '../../../schema/user.schema';
+// interface import
+import {addUserService} from '../../../service/user/addUser/addUser.service.interface';
+
+/*
+ * body request data interface
+ */
+interface IUserData {
+  name: string;
+  email: string;
+}
+
+/*
+ * controller factory init
+ */
+const addUserController: AddUserController = new AddUserController(
+  addUserSchema,
+  addUserService
+);
+
+export {IUserData, addUserController};
+```
+
+Observations
+<br />
+
+- We also include addUserService to inject the dependency in the addUserController factory and not a direct injection so we can add a unit test mocking this model later.
+- We will need a basic controller implementation file with the class and that implements this interface.
+
+<br />
+
+### 3. Create a file named addUser.controller.ts to addUser folder
+
+```json
+addUser.contoller.ts
+```
+
+```typescript
+// module import
+import {Request, Response} from 'express';
+import {ObjectSchema} from 'joi';
+import {StatusCodes} from 'http-status-codes';
