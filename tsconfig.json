@@ -8,7 +8,9 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "lib": ["ES2021"],
+    "target": "ES2021"
   },
   "include": ["src/**/*.ts", "src/**/*.test.ts"]
 }
