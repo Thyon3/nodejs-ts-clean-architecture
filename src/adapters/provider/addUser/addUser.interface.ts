@@ -11,3 +11,6 @@ import { http } from '../../../infrastructure/http/http.interface';
 export interface IAddUserProvider {
   create(user: UserDomain): Promise<ResponseDomain>;
 }
+
+// provider factory init
+export const addUserProvider = new AddUserProvider(environmentConfig, http);
