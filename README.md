@@ -106,3 +106,95 @@ Observations
 <br />
 
 ---
+
+## Service explained
+
+Service is the layer that defines the use case definition resolution. In service main folder we add a folder with this specific service name in this example we use user so the structure will be /service/user. In this folder we have 3 files that are needed:
+user.response.ts (This holds all the use case resposes positive or negative)
+user.service.interface.ts (This holds the service factory for dependency injection and all it's definitions)
+user.service.ts (This holds the service coding for resolution)
+
+![alt text](./service.png)
+
+### In this example we will create a new service in service/user folder to add new users
+
+<br />
+
+1. Create the needed structure in service folder create a new folder user if needed, then create a folder [addUser]
+2. Create a file named addUser.reponse.ts to addUser folder
+3. Create a file named addUser.service.interface.ts to addUser folder
+4. Create a file named addUser.service.ts to addUser folder
+
+#### 2. Create a file named addUser.reponse.ts to addUser folder
+
+```json
+addUser.response.ts
+```
+
+```typescript
+// module import
+import {StatusCodes} from 'http-status-codes';
+// domain import
+import IResponseDomain from '../../../domain/response.domain';
+// interface import
+import {IAddUserResponse} from './addUser.service.interface';
+
+/*
+ * BAD_REQUEST
+ */
+const USER_EXISTS: IResponseDomain = {
+  error: true,
+  message: 'USER_EXISTS',
+  code: StatusCodes.BAD_REQUEST,
+};
+
+/*
+ * INTERNAL_SERVER_ERROR
+ */
+const INSERT_USER_ERROR: IResponseDomain = {
+  error: true,
+  message: 'INSERT_USER_ERROR',
+  code: StatusCodes.INTERNAL_SERVER_ERROR,
+};
+
+/*
+ * CREATED
+ */
+const CREATED: IResponseDomain = {
+  error: false,
+  message: 'USER_CREATED',
+  code: StatusCodes.CREATED,
+};
+
+// response to export with definition
+const addUserResponse: IAddUserResponse = {
+  USER_EXISTS,
+  INSERT_USER_ERROR,
+  CREATED,
+};
+
+export default addUserResponse;
+
+export {USER_EXISTS, INSERT_USER_ERROR, CREATED};
+```
+
+Observations
+<br />
+
+- We use IResponseDomain this interface comes with the structure to define how the controller receives the response from the service.
+- We also include IAddUserResponse this is only an interface in the service.interface file to define all the responses that the service will have positive or negative.
+- We will need a basic service.interface file with the needed interface structure like in the example below.
+
+```typescript
+// for addMessageService response domain
+interface IAddUserResponse {
+  USER_EXISTS: IResponseDomain;
+  INSERT_USER_ERROR: IResponseDomain;
+  CREATED: IResponseDomain;
+}
+```
+
+#### 3. Create a file named addUser.interface.service.ts to addUser folder
+
+```json
+addUser.service.interface.ts
