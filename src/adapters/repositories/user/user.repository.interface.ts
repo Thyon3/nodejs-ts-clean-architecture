@@ -16,6 +16,7 @@ interface IUserRepository {
   findUser(email: string): Promise<QueryUserDto | null>;
   findByEmail(email: string): Promise<QueryUserDto | null>;
   findById(id: string): Promise<QueryUserDto | null>;
+  updateEmailVerificationStatus(userId: string, isVerified: boolean): Promise<void>;
 }
 
 export { IUserRepository, USER_REPOSITORY_TYPE };

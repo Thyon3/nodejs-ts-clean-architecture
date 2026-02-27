@@ -14,6 +14,8 @@ class QueryUserDto {
   @Expose()
   role: string;
   @Expose()
+  emailVerified: boolean;
+  @Expose()
   createdAt: Date;
   @Expose()
   updatedAt: Date;
